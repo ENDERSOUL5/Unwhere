@@ -11,7 +11,7 @@ Searches and removes packages across **dnf**, **flatpak** and **pacman** from a 
 [![Build](https://img.shields.io/github/actions/workflow/status/endersoul/unwhere/rust.yml?branch=master)](https://github.com/endersoul/unwhere/actions)
 
 <p align="right">
-  <a href="README.md">🇪🇸 Español</a>
+  <a href="README.es.md">🇪🇸 Español</a>
 </p>
 
 </div>
@@ -52,11 +52,11 @@ Searches and removes packages across **dnf**, **flatpak** and **pacman** from a 
 
 ## Supported Package Managers
 
-| Manager | List Command | Delete Command | Requires sudo? |
-|---------|-------------|----------------|----------------|
-| **dnf** | `dnf list --installed` | `dnf rm` | ✅ Yes |
-| **flatpak** | `flatpak list --app --columns=application` | `flatpak uninstall` | ❌ No |
-| **pacman** | `pacman -Q` | `pacman -R` | ✅ Yes |
+| Manager     | List Command                               | Delete Command      | Requires sudo? |
+| ----------- | ------------------------------------------ | ------------------- | -------------- |
+| **dnf**     | `dnf list --installed`                     | `dnf rm`            | ✅ Yes          |
+| **flatpak** | `flatpak list --app --columns=application` | `flatpak uninstall` | ❌ No           |
+| **pacman**  | `pacman -Q`                                | `pacman -R`         | ✅ Yes          |
 
 ---
 
@@ -173,9 +173,9 @@ $ unwhere ^gnome-
 
 ### Dependencies
 
-| Crate | Version | Usage |
-|-------|---------|-------|
-| `regex` | 1.13.1 | Package search with regex |
+| Crate   | Version | Usage                     |
+| ------- | ------- | ------------------------- |
+| `regex` | 1.13.1  | Package search with regex |
 
 ### Build
 
