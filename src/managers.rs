@@ -75,7 +75,7 @@ pub fn uninstall(package_name: &str){
         println!("choose the option");
         let mut option = String::new();
 
-        io::stdin().read_line(&mut option);
+        let _= io::stdin().read_line(&mut option);
 
         let options:i32 = option.trim().parse().unwrap();
 
