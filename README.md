@@ -2,213 +2,217 @@
 
 # 🗑️ unwhere
 
-**Desinstalador de paquetes universal para Linux**
+**Universal package uninstaller for Linux**
 
-Busca y elimina paquetes en **dnf**, **flatpak** y **pacman** desde una sola línea de comandos.
+Searches and removes packages across **dnf**, **flatpak** and **pacman** from a single command line.
 
 [![Rust](https://img.shields.io/badge/Rust-2024-orange?logo=rust)](https://www.rust-lang.org/)
-[![License](https://img.shields.io/badge/license-MIT-green)](#licencia)
+[![License](https://img.shields.io/badge/license-MIT-green)](#license)
 [![Build](https://img.shields.io/github/actions/workflow/status/endersoul/unwhere/rust.yml?branch=master)](https://github.com/endersoul/unwhere/actions)
+
+<p align="right">
+  <a href="README.md">🇪🇸 Español</a>
+</p>
 
 </div>
 
 ---
 
-## 📋 Tabla de contenidos
+## 📋 Table of Contents
 
-- [Descripción](#descripción)
-- [Características](#características)
-- [Gestores de paquetes soportados](#gestores-de-paquetes-soportados)
-- [Instalación](#instalación)
-- [Uso](#uso)
-- [Ejemplos](#ejemplos)
-- [Cómo funciona](#cómo-funciona)
-- [Construcción desde el código fuente](#construcción-desde-el-código-fuente)
-- [Acerca de este proyecto](#acerca-de-este-proyecto)
-- [Licencia](#licencia)
-
----
-
-## Descripción
-
-`unwhere` es una herramienta de línea de comandos escrita en Rust que simplifica la desinstalación de paquetes en distribuciones Linux. En lugar de recordar qué gestor de paquetes instaló cada aplicación, `unwhere` busca automáticamente en todos los gestores instalados y te permite eliminar lo que necesitas con un solo comando.
+- [Description](#description)
+- [Features](#features)
+- [Supported Package Managers](#supported-package-managers)
+- [Installation](#installation)
+- [Usage](#usage)
+- [Examples](#examples)
+- [How It Works](#how-it-works)
+- [Building from Source](#building-from-source)
+- [About This Project](#about-this-project)
+- [License](#license)
 
 ---
 
-## Características
+## Description
 
-- 🔍 **Búsqueda universal** — Busca paquetes en múltiples gestores simultáneamente
-- 🎯 **Búsqueda inteligente** — Usa expresiones regex con insensibilidad a mayúsculas/minúsculas
-- ⚡ **Eliminación directa** — Si solo encuentra una coincidencia, la elimina automáticamente
-- 🤔 **Selección interactiva** — Si encuentra varias coincidencias, te muestra opciones para elegir
-- 🔒 **Manejo de permisos** — Ejecuta comandos con `sudo` cuando es necesario (dnf, pacman)
-- 🦀 **Rendimiento** — Escrito en Rust para velocidad y fiabilidad
+`unwhere` is a command-line tool written in Rust that simplifies package uninstallation on Linux distributions. Instead of remembering which package manager installed each application, `unwhere` automatically searches across all installed managers and lets you remove what you need with a single command.
 
 ---
 
-## Gestores de paquetes soportados
+## Features
 
-| Gestor | Comando de listado | Comando de eliminación | ¿Requiere sudo? |
-|--------|-------------------|----------------------|------------------|
-| **dnf** | `dnf list --installed` | `dnf rm` | ✅ Sí |
+- 🔍 **Universal Search** — Searches packages across multiple managers simultaneously
+- 🎯 **Smart Search** — Uses regex with case-insensitive matching
+- ⚡ **Direct Removal** — If only one match is found, it is removed automatically
+- 🤔 **Interactive Selection** — If multiple matches are found, it shows options to choose from
+- 🔒 **Permission Handling** — Runs commands with `sudo` when required (dnf, pacman)
+- 🦀 **Performance** — Written in Rust for speed and reliability
+
+---
+
+## Supported Package Managers
+
+| Manager | List Command | Delete Command | Requires sudo? |
+|---------|-------------|----------------|----------------|
+| **dnf** | `dnf list --installed` | `dnf rm` | ✅ Yes |
 | **flatpak** | `flatpak list --app --columns=application` | `flatpak uninstall` | ❌ No |
-| **pacman** | `pacman -Q` | `pacman -R` | ✅ Sí |
+| **pacman** | `pacman -Q` | `pacman -R` | ✅ Yes |
 
 ---
 
-## Instalación
+## Installation
 
-### Desde GitHub Releases
+### From GitHub Releases
 
 ```bash
-# Descargar la última versión (reemplaza la URL con la versión correcta)
+# Download the latest version (replace the URL with the correct version)
 wget https://github.com/endersoul/unwhere/releases/latest/download/unwhere -O /usr/local/bin/unwhere
 
-# Dar permisos de ejecución
+# Give execute permissions
 chmod +x /usr/local/bin/unwhere
 ```
 
-### Compilar desde el código fuente
+### Build from Source
 
 ```bash
-# Clonar el repositorio
+# Clone the repository
 git clone https://github.com/endersoul/unwhere.git
 cd unwhere
 
-# Compilar en modo release
+# Build in release mode
 cargo build --release
 
-# El binario estará en target/release/unwhere
-# Copiarlo a una ubicación en tu PATH
+# The binary will be at target/release/unwhere
+# Copy it to a location in your PATH
 cp target/release/unwhere /usr/local/bin/
 ```
 
 ---
 
-## Uso
+## Usage
 
 ```bash
-unwhere <nombre_del_paquete>
+unwhere <package_name>
 ```
 
-### Flujo básico
+### Basic Flow
 
-1. Ejecutas `unwhere` con el nombre (o parte del nombre) de un paquete
-2. `unwhere` busca en **dnf**, **flatpak** y **pacman**
-3. Si encuentra **1 resultado** → lo elimina automáticamente
-4. Si encuentra **varios resultados** → te muestra una lista y te pide que elijas
-5. Si **no encuentra nada** → muestra "no match found"
+1. You run `unwhere` with the name (or partial name) of a package
+2. `unwhere` searches across **dnf**, **flatpak** and **pacman**
+3. If **1 result** is found → it is removed automatically
+4. If **multiple results** are found → a list is shown and you are asked to choose
+5. If **nothing is found** → displays "no match found"
 
 ---
 
-## Ejemplos
+## Examples
 
-### Eliminar un paquete específico
+### Remove a specific package
 
 ```bash
 $ unwhere firefox
 
-# Si "firefox" solo aparece en un gestor, se elimina directamente
+# If "firefox" only appears in one manager, it is removed directly
 ```
 
-### Buscar con nombre parcial
+### Search with partial name
 
 ```bash
 $ unwhere code
 
-# Podría encontrar: vscode, codeblocks, code-server, etc.
-# Te mostraría algo como:
+# Could find: vscode, codeblocks, code-server, etc.
+# Would show something like:
 # (0) vscode flatpak
 # (1) codeblocks dnf
 # choose the option
 # 1
 ```
 
-### Búsqueda con expresión regular
+### Search with regular expression
 
 ```bash
-# Buscar todos los paquetes que contengan "lib"
+# Find all packages containing "lib"
 $ unwhere lib
 
-# Buscar paquetes que empiecen con "gnome-"
+# Find packages starting with "gnome-"
 $ unwhere ^gnome-
 ```
 
 ---
 
-## Cómo funciona
+## How It Works
 
 ```
 ┌─────────────────────────────────────────┐
 │              unwhere                     │
 ├─────────────────────────────────────────┤
-│  1. Recibe el nombre del paquete        │
-│  2. Compila una regex (case-insensitive)│
-│  3. Itera sobre cada gestor instalado:  │
+│  1. Receives the package name           │
+│  2. Compiles a regex (case-insensitive) │
+│  3. Iterates over each installed manager│
 │     ┌───────┐ ┌─────────┐ ┌─────────┐  │
 │     │  dnf  │ │ flatpak │ │ pacman  │  │
 │     └───┬───┘ └────┬────┘ └────┬────┘  │
 │         │          │           │        │
 │         ▼          ▼           ▼        │
-│  4. Lista paquetes de cada gestor       │
-│  5. Filtra por regex                    │
-│  6. Si 1 match → elimina               │
-│  7. Si N matches → muestra opciones     │
-│  8. Si 0 matches → "no match found"    │
+│  4. Lists packages from each manager    │
+│  5. Filters by regex                    │
+│  6. If 1 match → removes               │
+│  7. If N matches → shows options        │
+│  8. If 0 matches → "no match found"     │
 └─────────────────────────────────────────┘
 ```
 
 ---
 
-## Construcción desde el código fuente
+## Building from Source
 
-### Requisitos
+### Requirements
 
-- [Rust](https://www.rust-lang.org/tools/install) (edición 2024 o superior)
-- Cargo (incluido con Rust)
+- [Rust](https://www.rust-lang.org/tools/install) (edition 2024 or later)
+- Cargo (included with Rust)
 
-### Dependencias
+### Dependencies
 
-| Crate | Versión | Uso |
-|-------|---------|-----|
-| `regex` | 1.13.1 | Búsqueda de paquetes con regex |
+| Crate | Version | Usage |
+|-------|---------|-------|
+| `regex` | 1.13.1 | Package search with regex |
 
-### Compilar
+### Build
 
 ```bash
-# Modo debug
+# Debug mode
 cargo build
 
-# Modo release (recomendado para uso diario)
+# Release mode (recommended for daily use)
 cargo build --release
 ```
 
 ---
 
-## Acerca de este proyecto
+## About This Project
 
-> Este es **mi primer proyecto** programado en Rust. Como tal, probablemente tiene fallos, áreas de mejora y código que no es 100% idiomático. Cualquier contribución, issue o feedback es bienvenido y me ayudará a mejorar tanto el proyecto como mis habilidades como desarrollador.
+> This is **my first project** written in Rust. As such, it likely has bugs, areas for improvement, and code that is not 100% idiomatic. Any contribution, issue, or feedback is welcome and will help me improve both the project and my skills as a developer.
 
-### Limitaciones conocidas
+### Known Limitations
 
-- La búsqueda depende del formato de salida de cada gestor de paquetes; si un gestor cambia su formato, podría dejar de funcionar correctamente
-- No se muestran las versiones de los paquetes encontrados
-- La lista de gestores soportados está hardcodeada (aunque agregar nuevos es sencillo)
+- Search depends on the output format of each package manager; if a manager changes its format, it may stop working correctly
+- Package versions of found packages are not displayed
+- The list of supported managers is hardcoded (although adding new ones is straightforward)
 
-### Roadmap futuro
+### Future Roadmap
 
-- [ ] Agregar más gestores de paquetes (apt, snap, brew...)
-
----
-
-## Licencia
-
-Este proyecto está bajo la licencia MIT. Consulta el archivo [LICENSE](LICENSE) para más detalles.
+- [ ] Add more package managers (apt, snap, brew...)
 
 ---
 
-<div align="center">
+## License
 
-Hecho con 🦀 Rust
+This project is licensed under the MIT License. See the [LICENSE](LICENSE) file for more details.
+
+---
+
+<div align="center>
+
+Made with 🦀 Rust
 
 </div>
