@@ -1,7 +1,7 @@
 use std::env;
 
 
-pub mod gestores;
+pub mod managers;
 
 
 fn main() {
@@ -9,7 +9,7 @@ fn main() {
 
     let args: Vec<String> = env::args().collect();
 
-    gestores::uninstall(args.get(1).expect("se necesita el nombre del paquete a eleminar"));
+    managers::uninstall(args.get(1).expect("the package name to remove is required"));
 
 
 

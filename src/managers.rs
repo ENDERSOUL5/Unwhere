@@ -5,13 +5,13 @@ use regex::RegexBuilder;
 
 struct PackageManager{
      name: String,
-    // comando que se utiliza para obtener el ID necesario para eliminar
+    // command used to obtain the ID needed for deletion
      list_command: String,
 
-     column_num: i8, // Se inicia desde 0
+     column_num: i8, // Starts from 0
     
-    // Comando para junto con el ID eliminar el paquete
-     delete_comand: String,
+    // Command to delete the package along with the ID
+     delete_command: String,
 
     need_delete_root: bool
 
@@ -38,7 +38,7 @@ pub fn uninstall(package_name: &str){
     let regex = RegexBuilder::new(package_name).case_insensitive(true).build().unwrap();
 
 
-    package_managers.instalado.iter().for_each(|manager|{
+    package_managers.installed.iter().for_each(|manager|{
 
         let list_packages = manager.execute_list_command();
 
@@ -64,22 +64,22 @@ pub fn uninstall(package_name: &str){
         println!("({}) {} {}", package_actual.0, package_actual.1.name, package_actual.1.package_manager.name)
     });
 
-    // Eliminar si solo hay uno
+    // Delete if only one
     if found_packages.len() == 1{
         found_packages.get(0).unwrap().delete();
     }
-    else if found_packages.len() == 0 {println!("no se encontro ninguna coincidencia");
+    else if found_packages.len() == 0 {println!("no match found");
             return;
     }
     else{
-        println!("elije la opcion");
-        let mut opcion = String::new();
+        println!("choose the option");
+        let mut option = String::new();
 
-        io::stdin().read_line(&mut opcion);
+        io::stdin().read_line(&mut option);
 
-        let opciones:i32 = opcion.trim().parse().unwrap();
+        let options:i32 = option.trim().parse().unwrap();
 
-        if let Some(package) = found_packages.get(opciones as usize) {
+        if let Some(package) = found_packages.get(options as usize) {
             package.delete();
         }
     }
@@ -92,26 +92,26 @@ pub fn uninstall(package_name: &str){
 
 impl PackageManager{
 
-    /// retorna la salida del comando
+    /// Returns the command output
      fn execute_list_command(&self) -> String{
-        let salida = Command::new(&self.name)
+        let output = Command::new(&self.name)
         .args(self.list_command.split_whitespace()).output();
 
-        if let Err(_) = salida {return String::new() }
+        if let Err(_) = output {return String::new() }
 
-        let salida = salida.unwrap().stdout;
-
-
-
-        let salida = str::from_utf8(&salida).expect("errores");
+        let output = output.unwrap().stdout;
 
 
-        // Se debe solo obtener la columna que tiene los nombres de paquetes
-        // hay paquetes que agregan mas cosas pero solo nos interesa el nombre porque se usa para desinstalar
+
+        let output = str::from_utf8(&output).expect("errors");
+
+
+        // Only the column with package names should be obtained
+        // Some packages add more info but we only care about the name since it's used for uninstalling
         
-        let packages: Vec<&str> = salida.lines()
-        .filter_map(|linea| {
-            linea.split_whitespace().nth(self.column_num as usize)
+        let packages: Vec<&str> = output.lines()
+        .filter_map(|line| {
+            line.split_whitespace().nth(self.column_num as usize)
         })
         .collect();
 
@@ -126,11 +126,11 @@ impl PackageManager{
 
      fn execute_delete_command(&self, name: &str){
         if self.need_delete_root {
-        let full_command = format!("{} {} {}", self.name, self.delete_comand, name);
+        let full_command = format!("{} {} {}", self.name, self.delete_command, name);
         let _= Command::new("sudo").args(full_command.split_whitespace()).status();
         }
         else {
-        let full_command = format!("{} {}",self.delete_comand, name);
+        let full_command = format!("{} {}",self.delete_command, name);
         let _= Command::new(&self.name).args(full_command.split_whitespace()).status();
 
         }
@@ -138,7 +138,7 @@ impl PackageManager{
     }
 
     pub fn new(name: &str, list_command: &str, delete_command: &str, column_num: i8, need_delete_root: bool) -> Self{
-        PackageManager { name: name.to_string(), list_command: list_command.to_string(), delete_comand: delete_command.to_string(),
+        PackageManager { name: name.to_string(), list_command: list_command.to_string(), delete_command: delete_command.to_string(),
             column_num, need_delete_root
          }
     }
@@ -147,14 +147,14 @@ impl PackageManager{
 
 struct InstalledPackageManager{
 
-    instalado: Vec<Rc<PackageManager>>
+    installed: Vec<Rc<PackageManager>>
     
 }
 
 impl InstalledPackageManager {
     
-    /// Crear el struct con todos los manejadores de paquetes soportados
-    /// Para agregar un nuevo manejador solo se tiene que colocar los atributos de cada manejador
+    /// Create the struct with all supported package managers
+    /// To add a new manager you just need to add the attributes for each manager
      fn new() -> Self{
         let vec = vec![
 
@@ -174,33 +174,21 @@ impl InstalledPackageManager {
 
 
 
-
-
-
         
-
-
-
-
 
 
         ];
 
 
-        Self { instalado: vec }
+        Self { installed: vec }
         
 
 
-
+        
 
 
 
     }
 }
-
-
-
-
-
 
 
