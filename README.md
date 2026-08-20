@@ -62,15 +62,7 @@ Searches and removes packages across **dnf**, **flatpak** and **pacman** from a 
 
 ## Installation
 
-### From GitHub Releases
 
-```bash
-# Download the latest version (replace the URL with the correct version)
-wget https://github.com/endersoul/unwhere/releases/latest/download/unwhere -O /usr/local/bin/unwhere
-
-# Give execute permissions
-chmod +x /usr/local/bin/unwhere
-```
 
 ### Build from Source
 

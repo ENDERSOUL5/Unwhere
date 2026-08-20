@@ -23,7 +23,7 @@ Busca y elimina paquetes en **dnf**, **flatpak** y **pacman** desde una sola lí
 - [Descripción](#descripción)
 - [Características](#características)
 - [Gestores de paquetes soportados](#gestores-de-paquetes-soportados)
-- [Instalación](#instalación)
+- [Instalación](#instalacin)
 - [Uso](#uso)
 - [Ejemplos](#ejemplos)
 - [Cómo funciona](#cómo-funciona)
@@ -60,19 +60,11 @@ Busca y elimina paquetes en **dnf**, **flatpak** y **pacman** desde una sola lí
 
 ---
 
-## Instalación
+## instalación
 
-### Desde GitHub Releases
 
-```bash
-# Descargar la última versión (reemplaza la URL con la versión correcta)
-wget https://github.com/endersoul/unwhere/releases/latest/download/unwhere -O /usr/local/bin/unwhere
 
-# Dar permisos de ejecución
-chmod +x /usr/local/bin/unwhere
-```
-
-### Compilar desde el código fuente
+## ### Compilar desde el código fuente
 
 ```bash
 # Clonar el repositorio
