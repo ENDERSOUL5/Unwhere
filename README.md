@@ -183,12 +183,6 @@ cargo build
 cargo build --release
 ```
 
-### Ejecutar tests
-
-```bash
-cargo test
-```
-
 ---
 
 ## Acerca de este proyecto
@@ -204,10 +198,6 @@ cargo test
 ### Roadmap futuro
 
 - [ ] Agregar más gestores de paquetes (apt, snap, brew...)
-- [ ] Mostrar versiones de los paquetes en los resultados
-- [ ] Agregar flag `--dry-run` para previsualizar la eliminación
-- [ ] Agregar modo `--all` para eliminar todas las coincidencias
-- [ ] Interfaz interativa con selección visual (TUI)
 
 ---
 
