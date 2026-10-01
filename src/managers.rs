@@ -1,6 +1,6 @@
 use std::{io, process::Command, rc::Rc, vec};
 
-use regex::RegexBuilder;
+use regex::{RegexBuilder, regex};
 
 
 struct PackageManager{
@@ -37,25 +37,22 @@ pub fn uninstall(package_name: &str){
 
     let regex = RegexBuilder::new(package_name).case_insensitive(true).build().unwrap();
 
-
     package_managers.installed.iter().for_each(|manager|{
 
         let list_packages = manager.execute_list_command();
 
-
-        list_packages.lines().for_each(|line|{
-            if regex.is_match(line){
-                let select_packa = SelectedPackages{
-                    name: line.to_string(),
-                    package_manager: Rc::clone(manager),
-                };
-
-                found_packages.push(select_packa);
-
+        let temp_found_packages = 
+        list_packages.lines().filter(|name| regex.is_match(name))
+        .map(|found| {
+            SelectedPackages{
+                name: found.to_string(),
+                package_manager: Rc::clone(manager)
             }
-            
-
         });
+
+        found_packages.extend(temp_found_packages)
+
+
 
 
     });
