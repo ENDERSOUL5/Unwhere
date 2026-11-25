@@ -1,12 +1,11 @@
-use std::{io, process::Command, rc::Rc, vec};
+use std::{collections::HashMap, io, process::Command, rc::Rc, vec};
 
 use comfy_table::Table;
 use regex::RegexBuilder;
 
-use crate::OrExit;
 
 
-
+#[derive(PartialEq, Eq, Hash)]
 struct PackageManager{
      name: String,
     // command used to obtain the ID needed for deletion
@@ -87,9 +86,31 @@ pub fn uninstall(package_name: &str){
 
         let _= io::stdin().read_line(&mut option);
 
-        let options: i32 = option.trim().parse().or_exit("La opcion elegida no es un numero");
+        let mut unistall_managers : HashMap<Rc<PackageManager>, String> = HashMap::new();
 
-        found_packages.get(options as usize).or_exit("opcion fuera de rango").delete();
+
+        let options:Vec<usize> = option.split_whitespace().filter_map(|x| x.parse().ok()).collect();
+
+        for i in options{
+            match found_packages.get(i) {
+                None => {continue;}
+                Some(option) => {
+                    unistall_managers.entry(Rc::clone(&option.package_manager))
+                    .and_modify(|x| {
+                        x.push_str(&format!(" {}", option.name));
+                    }).or_insert_with(|| option.name.clone());
+                }
+            }
+             
+
+        }
+
+        if unistall_managers.is_empty() {println!("Elecciones incorrectas")}
+
+
+        unistall_managers.iter().for_each(|f| 
+            f.0.execute_delete_command(f.1));
+        
     }
 
 
